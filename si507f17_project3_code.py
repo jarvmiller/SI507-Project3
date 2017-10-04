@@ -12,7 +12,6 @@ import requests
 
 ######### PART 0 #########
 
-# Write your code for Part 0 here.
 
 
 ######### PART 1 #########
