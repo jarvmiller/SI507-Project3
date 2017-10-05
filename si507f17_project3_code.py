@@ -157,7 +157,8 @@ class NationalSite(object):
         try:
             street = soup_info.select('.street-address')[0].text
             street = street.replace('\n', "/")
-            return street + self.location
+            loc = ' '.join([soup_info.find('span', {"itemprop": "addressLocality"}).text, soup_info.find('span', {"itemprop": "addressRegion"}).text, soup_info.find('span', {"itemprop": "postalCode"}).text])
+            return street + loc
         except:
             return ""
     
