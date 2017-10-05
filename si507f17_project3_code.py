@@ -11,6 +11,12 @@ import requests
 
 
 ######### PART 0 #########
+page = requests.get("http://newmantaylor.com/gallery.html")
+soup = BeautifulSoup(page.text, 'html.parser')
+img_tags = soup.find_all("img")
+for img in img_tags:
+    print(img.get("alt", "No alternative text provided!"))
+
 
 
 
@@ -25,6 +31,34 @@ import requests
 # that the rest of the program can access.
 
 # We've provided comments to guide you through the complex try/except, but if you prefer to build up the code to do this scraping and caching yourself, that is OK.
+
+def get_and_cache_page(relative_url, filename):
+    base_url = "https://www.nps.gov"
+    try:
+        page = open(filename, 'r').text
+    except:
+        page = requests.get(base_url + relative_url).text
+        with open(filename, 'w') as f:
+            f.write(page)
+    return page
+
+def get_state_url(state_abrs):
+    if not isinstance(state_abrs, list):
+        state_abrs = list(state_abrs)
+    state_urls = [main_soup.find('a', href=True, text=item)['href'] for item in states]
+    return state_urls
+
+nps_main = get_and_cache_page("/index.htm", "nps_gov_data.html")
+main_soup = BeautifulSoup(nps_main, 'html.parser')
+
+
+states = ['Arkansas', 'California', 'Michigan']
+urls = get_state_url(states)
+
+nps_ar = get_and_cache_page(urls[0], "arkansas_data.html")
+nps_ca = get_and_cache_page(urls[1], "california_data.html")
+nps_mi = get_and_cache_page(urls[2], "michigan_data.html")
+
 
 
 
@@ -97,7 +131,38 @@ import requests
 ## Define your class NationalSite here:
 
 
+class NationalSite(object):
+    def __init__(self, site_soup):
+        self.location = site_soup.find('h4').text
+        self.name = site_soup.find('h3').text
+        try:
+            self.description = site_soup.find('p').text
+        except:
+            self.description = ''
+        try:
+            self.type = site_soup.find('h2').text
+        except:
+            self.type = None
+        self.soup = site_soup
+        
+    def __str__(self):
+        return "{0} | {1}".format(self.name, self.location)
+    
+    def get_mailing_address(self):
+        # not sure if space comes before Basic Information each time so i'll play it safe
+        # info_url = self.soup.find('a', href=True, text="Basic Information")
 
+        info_url = [link['href'] for link in self.soup.find_all('a', href=True) if "Basic Information" in link.text][0]
+        soup_info = BeautifulSoup(requests.get(info_url).text, 'html.parser')
+        try:
+            street = soup_info.select('.street-address')[0].text
+            street = street.replace('\n', "/")
+            return street + self.location
+        except:
+            return ""
+    
+    def __contains__(self, input):
+        return input in self.name
 
 
 ## Recommendation: to test the class, at various points, uncomment the following code and invoke some of the methods / check out the instance variables of the test instance saved in the variable sample_inst:

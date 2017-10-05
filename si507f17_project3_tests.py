@@ -50,40 +50,40 @@ class Part2(unittest.TestCase):
     def test_nationalsite_contains(self):
         self.assertTrue("le" in self.sample_inst)
         self.assertTrue("Yosemite" not in self.sample_inst)
-
-class Part3(unittest.TestCase):
-
-    def setUp(self):
-        pass
-
-    def test_list_vars(self):
-        self.assertIsInstance(arkansas_natl_sites,list)
-        self.assertIsInstance(california_natl_sites, list)
-        self.assertIsInstance(michigan_natl_sites, list)
-
-    def test_list_elem_types(self):
-        self.assertIsInstance(arkansas_natl_sites[0],NationalSite)
-        self.assertIsInstance(arkansas_natl_sites[-1],NationalSite)
-        self.assertIsInstance(california_natl_sites[0],NationalSite)
-        self.assertIsInstance(michigan_natl_sites[0],NationalSite)
-
-
-class Part4(unittest.TestCase):
-    
-    def setUp(self):
-        self.ak = open("arkansas.csv",'r')
-        self.mi = open("michigan.csv",'r')
-        self.ca = open("california.csv",'r')
-
-    def test_csv_files_exist(self):
-        self.assertTrue(self.ak.read())
-        self.assertTrue(self.ca.read())
-        self.assertTrue(self.mi.read())
-
-    def tearDown(self):
-        self.ak.close()
-        self.ca.close()
-        self.mi.close()
+##
+##class Part3(unittest.TestCase):
+##
+##    def setUp(self):
+##        pass
+##
+##    def test_list_vars(self):
+##        self.assertIsInstance(arkansas_natl_sites,list)
+##        self.assertIsInstance(california_natl_sites, list)
+##        self.assertIsInstance(michigan_natl_sites, list)
+##
+##    def test_list_elem_types(self):
+##        self.assertIsInstance(arkansas_natl_sites[0],NationalSite)
+##        self.assertIsInstance(arkansas_natl_sites[-1],NationalSite)
+##        self.assertIsInstance(california_natl_sites[0],NationalSite)
+##        self.assertIsInstance(michigan_natl_sites[0],NationalSite)
+##
+##
+##class Part4(unittest.TestCase):
+##    
+##    def setUp(self):
+##        self.ak = open("arkansas.csv",'r')
+##        self.mi = open("michigan.csv",'r')
+##        self.ca = open("california.csv",'r')
+##
+##    def test_csv_files_exist(self):
+##        self.assertTrue(self.ak.read())
+##        self.assertTrue(self.ca.read())
+##        self.assertTrue(self.mi.read())
+##
+##    def tearDown(self):
+##        self.ak.close()
+##        self.ca.close()
+##        self.mi.close()
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
