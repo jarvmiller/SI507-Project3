@@ -179,6 +179,12 @@ class NationalSite(object):
 
 # HINT: Get a Python list of all the HTML BeautifulSoup instances that represent each park, for each state.
 
+ar_soup = BeautifulSoup(nps_ar, 'html.parser')
+ca_soup = BeautifulSoup(nps_ca, 'html.parser')
+mi_soup = BeautifulSoup(nps_mi, 'html.parser')
+arkansas_natl_sites = [NationalSite(x) for x in ar_soup.find_all('li', class_='clearfix', id=True)]
+california_natl_sites = [NationalSite(x) for x in ca_soup.find_all('li', class_='clearfix', id=True)]
+michigan_natl_sites = [NationalSite(x) for x in mi_soup.find_all('li', class_='clearfix', id=True)]
 
 
 
@@ -200,3 +206,23 @@ class NationalSite(object):
 
 ## Also remember that IF you have None values that may occur, you might run into some problems and have to debug for where you need to put in some None value / error handling!
 
+import csv
+
+def write_to_csv(filename, site_list):
+    with open(filename, 'w') as outfile:
+        outwriter = csv.writer(outfile, delimiter=',')
+        header = ["Name", "Location", "Type", "Address", "Description"]
+        outwriter.writerow(header)
+
+        for site in site_list:
+            if site.type is None:
+                typ = "None"
+            else:
+                typ = site.type
+            row = [site.name, site.location, typ, site.get_mailing_address(), site.description]
+            outwriter.writerow(row)
+
+
+write_to_csv("arkansas.csv", arkansas_natl_sites)
+write_to_csv("california.csv", california_natl_sites)
+write_to_csv("michigan.csv", michigan_natl_sites)
