@@ -139,10 +139,10 @@ class NationalSite(object):
             self.description = site_soup.find('p').text
         except:
             self.description = ''
-        try:
-            self.type = site_soup.find('h2').text
-        except:
+        if site_soup.find('h2').text == '':
             self.type = None
+        else:
+            self.type = site_soup.find('h2').text
         self.soup = site_soup
         
     def __str__(self):
@@ -155,10 +155,10 @@ class NationalSite(object):
         info_url = [link['href'] for link in self.soup.find_all('a', href=True) if "Basic Information" in link.text][0]
         soup_info = BeautifulSoup(requests.get(info_url).text, 'html.parser')
         try:
-            street = soup_info.select('.street-address')[0].text
-            street = street.replace('\n', "/")
-            loc = ' '.join([soup_info.find('span', {"itemprop": "addressLocality"}).text, soup_info.find('span', {"itemprop": "addressRegion"}).text, soup_info.find('span', {"itemprop": "postalCode"}).text])
-            return street + loc
+            mail_address = soup_info.find("p", class_="adr").text.strip().replace('\n', '/')
+            # get rid of the three '///' in a row
+            mail_address = mail_address.replace(re.findall(r'[/]{3}', mail_address)[0], '/')
+            return mail_address
         except:
             return ""
     
@@ -206,7 +206,6 @@ michigan_natl_sites = [NationalSite(x) for x in mi_soup.find_all('li', class_='c
 ## Note that running this step for ALL your data make take a minute or few to run -- so it's a good idea to test any methods/functions you write with just a little bit of data, so running the program will take less time!
 
 ## Also remember that IF you have None values that may occur, you might run into some problems and have to debug for where you need to put in some None value / error handling!
-
 import csv
 
 def write_to_csv(filename, site_list):
