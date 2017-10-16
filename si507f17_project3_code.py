@@ -1,7 +1,8 @@
 from bs4 import BeautifulSoup
 import unittest
 import requests
-
+import re
+import csv
 #########
 ## Instr note: the outline comments will stay as suggestions, otherwise it's too difficult.
 ## Of course, it could be structured in an easier/neater way, and if a student decides to commit to that, that is OK.
@@ -188,7 +189,6 @@ california_natl_sites = [NationalSite(x) for x in ca_soup.find_all('li', class_=
 michigan_natl_sites = [NationalSite(x) for x in mi_soup.find_all('li', class_='clearfix', id=True)]
 
 
-
 ##Code to help you test these out:
 # for p in california_natl_sites:
 # 	print(p)
@@ -206,7 +206,6 @@ michigan_natl_sites = [NationalSite(x) for x in mi_soup.find_all('li', class_='c
 ## Note that running this step for ALL your data make take a minute or few to run -- so it's a good idea to test any methods/functions you write with just a little bit of data, so running the program will take less time!
 
 ## Also remember that IF you have None values that may occur, you might run into some problems and have to debug for where you need to put in some None value / error handling!
-import csv
 
 def write_to_csv(filename, site_list):
     with open(filename, 'w') as outfile:
